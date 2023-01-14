@@ -27,13 +27,14 @@ router.post("/signup", async (req,res) => {
         newUser.__v = undefined;
 
         res.status(200).json({ data: newUser, message: "Account created successfully" });
+    
     } catch (e) {
-        return res.status(400).send(e);
+        return res.status(500).send(e);
     }
 });
 
-// Signin user
-router.post("/signin", async(req,res) => {
+// Login user
+router.post("/login", async(req,res) => {
     try {
         const {email,password} = req.body;
         if(email.length === 0) {
@@ -58,12 +59,20 @@ router.post("/signin", async(req,res) => {
 
         res.cookie('t', bearerToken, {expire: new Date() + 9999});
 
-        return res.status(200).json({ message: "Signed In Successfully!", bearerToken: bearerToken });
-
-
+        return res.status(200).json({ message: "Logged in successfully!", bearerToken: bearerToken });
 
     } catch (e) {
-        return res.status(400).send(e);
+        return res.status(500).send(e);
+    }
+})
+
+// Logout user
+router.get("/logout", (req,res) => {
+    try {
+        res.clearCookie('t');
+        return res.status(200).json({ message: "Logged out successfully!" });
+    } catch (e) {
+        return res.status(500).send(e);
     }
 })
 
