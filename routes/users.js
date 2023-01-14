@@ -1,13 +1,13 @@
 const router = require('express').Router();
 const User = require('../models/userModel');
-const validate = require('../utils/validators');
+const validateUser = require('../utils/validators');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
 // Signup user
 router.post("/signup", async (req,res) => {
     try{
-        const {error} = validate(req.body);
+        const {error} = validateUser(req.body);
         if(error){
             return res.status(400).json({message: error.details[0].message});
         }

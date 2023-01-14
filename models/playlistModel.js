@@ -1,16 +1,15 @@
 const mongoose = require('mongoose');
-const Joi = require("joi");
 
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const playlistSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
     user: {
         type: ObjectId,
         ref: "user",
-        required: true
-    },
-    name: {
-        type: String,
         required: true
     },
     description : {
