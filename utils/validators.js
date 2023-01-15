@@ -13,9 +13,9 @@ const validateUser = (user) => {
 const validatePlaylist = (playlist) => {
     const schema = Joi.object({
         name: Joi.string().required(),
-        user: Joi.string().required(),
-        description: Joi.string().allow(""),
-        songs: Joi.string().items(Joi.string())
+        user_id: Joi.string(),
+        description: Joi.string().required(),
+        songs: Joi.array().items(Joi.string())
     });
     return schema.validate(playlist);
 };

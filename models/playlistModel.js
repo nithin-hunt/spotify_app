@@ -7,10 +7,9 @@ const playlistSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    user: {
+    user_id: {
         type: ObjectId,
         ref: "user",
-        required: true
     },
     description : {
         type: String,
