@@ -4,6 +4,7 @@ const {validateUser} = require('../utils/validators');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
+
 // Signup user
 router.post("/signup", async (req,res) => {
     try{
@@ -26,10 +27,10 @@ router.post("/signup", async (req,res) => {
         newUser.password = undefined;
         newUser.__v = undefined;
 
-        res.status(200).json({ data: newUser, message: "Account created successfully" });
+        res.status(200).json({ message: "Account created successfully", data: newUser });
     
     } catch (e) {
-        return res.status(500).send(e);
+        return res.status(500).json({Error: e.message});
     }
 });
 
@@ -62,7 +63,7 @@ router.post("/login", async(req,res) => {
         return res.status(200).json({ message: "Logged in successfully!", bearerToken: bearerToken });
 
     } catch (e) {
-        return res.status(500).send(e);
+        return res.status(500).json({Error: e.message});
     }
 })
 
@@ -72,53 +73,8 @@ router.get("/logout", (req,res) => {
         res.clearCookie('t');
         return res.status(200).json({ message: "Logged out successfully!" });
     } catch (e) {
-        return res.status(500).send(e);
+        return res.status(500).json({Error: e.message});
     }
-})
-
-router.post("/forgot-password", async (req, res) => {
-    try {
-      const { email } = req.body;
-  
-      if (!validateEmail(email)) {
-        return res.status(403).send("please enter valid email");
-      }
-  
-      const userExists = await User.findOne({ email });
-  
-      if (!userExists) {
-        return res.status(404).send("User not found");
-      }
-  
-      const payload = { userID: userExists.userID };
-      const forgotToken = await jwt.sign(payload, process.env.SECRET, {
-        expiresIn: 360000,
-      });
-  
-      const resetLink = `${process.env.APP_URL}/api/v1/user/forgot-password/${forgotToken}`;
-  
-      const mailOptions = {
-        from: "shubhamrakhecha5@gmail.com",
-        to: email,
-        cc: [],
-        bcc: [],
-        subject: "password reset",
-        html: `<h1>Want to change your password right??</h1><p>If you send this request then click on reset password to reset your password or just ignore it</p><a href="${resetLink}">reset password</a>`,
-      };
-  
-      Transporter.sendMail(mailOptions, (err, info) => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("Email sended with=", info);
-        }
-      });
-  
-      return res.status(200).send("email sent sucessfully");
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({ err: err.message });
-    }
-  });
+});
 
 module.exports = router;

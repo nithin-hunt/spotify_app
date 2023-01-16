@@ -54,7 +54,6 @@ router.get("/search", isAuthenticated, async (req, res) => {
 // Get song by Id
 router.get("/:id", isAuthenticated, async (req,res) => {
     try {
-        console.log("here")
         const fetchSong = await fetch(`http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=${process.env.LASTFM_API_KEY}&mbid=${req.params.id}&format=json`)
         const song = await fetchSong.json();
         
@@ -69,7 +68,6 @@ router.get("/:id", isAuthenticated, async (req,res) => {
         
         return res.status(200).json(getSong);
     } catch (e) {
-        console.log(e)
         return res.status(400).json({Error: e});
     }
 

@@ -103,7 +103,6 @@ router.post("/:id/songs", [isAuthenticated, isPlaylistExist, isUserOwnPlaylist, 
         res.status(200).send({message: "Added to playlist", playlist: playlist});
 
     } catch(e) {
-        console.log(e);
         return res.status(500).json({Error: e});
     }
 });

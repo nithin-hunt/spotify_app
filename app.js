@@ -5,6 +5,7 @@ const app = express();
 const connectDB = require('./config/db');
 
 const userRoutes = require('./routes/users');
+const forgotPasswordRoutes = require('./routes/forgotPassword')
 const songRoutes = require('./routes/songs');
 const playlistRoutes = require('./routes/playlists');
 
@@ -13,6 +14,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 
+app.use("/api/users/forgot-password", forgotPasswordRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/songs", songRoutes);
 app.use("/api/playlists", playlistRoutes);
