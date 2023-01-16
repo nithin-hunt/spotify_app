@@ -22,7 +22,6 @@ const validatePlaylist = (playlist) => {
 
 const validateSong = (song) => {
     const schema = Joi.object({
-        song_id: Joi.string(),
         name: Joi.string().required(),
         artist: Joi.string().required(),
         song: Joi.string().required(),

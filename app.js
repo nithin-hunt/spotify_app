@@ -11,10 +11,11 @@ const playlistRoutes = require('./routes/playlists');
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
+app.use(express.urlencoded({extended:false}));
 
-app.use("/api/users/", userRoutes);
-app.use("/api/songs/", songRoutes);
-app.use("/api/playlists/", playlistRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/songs", songRoutes);
+app.use("/api/playlists", playlistRoutes);
 
 const start = async () => {
     try {

@@ -76,4 +76,49 @@ router.get("/logout", (req,res) => {
     }
 })
 
+router.post("/forgot-password", async (req, res) => {
+    try {
+      const { email } = req.body;
+  
+      if (!validateEmail(email)) {
+        return res.status(403).send("please enter valid email");
+      }
+  
+      const userExists = await User.findOne({ email });
+  
+      if (!userExists) {
+        return res.status(404).send("User not found");
+      }
+  
+      const payload = { userID: userExists.userID };
+      const forgotToken = await jwt.sign(payload, process.env.SECRET, {
+        expiresIn: 360000,
+      });
+  
+      const resetLink = `${process.env.APP_URL}/api/v1/user/forgot-password/${forgotToken}`;
+  
+      const mailOptions = {
+        from: "shubhamrakhecha5@gmail.com",
+        to: email,
+        cc: [],
+        bcc: [],
+        subject: "password reset",
+        html: `<h1>Want to change your password right??</h1><p>If you send this request then click on reset password to reset your password or just ignore it</p><a href="${resetLink}">reset password</a>`,
+      };
+  
+      Transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("Email sended with=", info);
+        }
+      });
+  
+      return res.status(200).send("email sent sucessfully");
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ err: err.message });
+    }
+  });
+
 module.exports = router;
