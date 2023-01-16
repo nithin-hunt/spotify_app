@@ -4,12 +4,12 @@ const isAuthenticated = async (req,res,next) => {
     try {
         const authHeader = req.headers.authorization;
         if(!authHeader) {
-            return res.status(401).json({Error: "Authorization header not found"})
+            return res.status(401).json({Error: "Access denied, Authorization header not found"});
         }
 
         const token = authHeader.split(" ")[1]; 
         if(!token) {
-            return res.status(401).json({Error: "Token not found"});
+            return res.status(401).json({Error: "Access denied, no token provided"});
         }
 
         jwt.verify(token, process.env.JWT_PRIVATE_KEY, (err, validToken) => {
