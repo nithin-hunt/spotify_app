@@ -31,7 +31,7 @@ router.get("/", isAuthenticated, async(req,res) => {
             }
             res.status(200).json(songList);
         } catch(e) {
-        return res.status(400).json({Error: e})
+        return res.status(400).json({Error: e.message})
     }
 });
 
