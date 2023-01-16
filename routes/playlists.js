@@ -70,5 +70,21 @@ router.put('/:id', [isAuthenticated, isPlaylistExist, isUserOwnPlaylist], async(
     }
 })
 
+// Delete playlist by Id
+router.delete('/:id', [isAuthenticated, isPlaylistExist, isUserOwnPlaylist] ,async (req,res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        const index = user.playlists.indexOf(req.params.id);
+        user.playlists.splice(index, 1);
+        await user.save();
+        
+        const playlist = await Playlist.findById(req.params.id);
+        await playlist.remove();
+        
+        return res.status(200).json("Playlist removed from library");
+    } catch (e) {
+        return res.status(500).json({Error: e});
+    }
+})
 
 module.exports = router;
