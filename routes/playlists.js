@@ -108,3 +108,22 @@ router.post("/:id/songs", [isAuthenticated, isPlaylistExist, isUserOwnPlaylist, 
     }
 });
 
+// Remove song from playlist
+router.delete("/:id/songs",[isAuthenticated, isPlaylistExist, isUserOwnPlaylist, isSongExist], async (req,res) => {
+    try {
+        const playlist = await Playlist.findById(req.params.id);
+        const index = playlist.songs.indexOf(req.body.song_id);
+        if (index === -1) {
+            return res.status(400).json("Song not available")
+        }
+        playlist.songs.splice(index, 1);
+        await playlist.save();
+
+        res.status(200).send({message: "Removed from playlist", playlist: playlist});
+
+    } catch(e) {
+        return res.status(500).json({Error: e});
+    }
+    })
+module.exports = router;
+
