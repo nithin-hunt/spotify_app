@@ -25,7 +25,6 @@ router.post("/", isAuthenticated, async (req,res) => {
 
         res.status(201).json(playlist);
     } catch (e) {
-        console.log(e);
         return res.status(500).json({Error: e});
     }
 });

@@ -5,6 +5,7 @@ const app = express();
 const connectDB = require('./config/db');
 
 const userRoutes = require('./routes/users');
+const songRoutes = require('./routes/songs');
 const playlistRoutes = require('./routes/playlists');
 
 const PORT = process.env.PORT || 5000;
@@ -12,6 +13,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 
 app.use("/api/users/", userRoutes);
+app.use("/api/songs/", songRoutes);
 app.use("/api/playlists/", playlistRoutes);
 
 const start = async () => {

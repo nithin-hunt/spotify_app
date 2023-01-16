@@ -16,6 +16,7 @@
     "joi": "^17.7.0",
     "joi-password-complexity": "^5.1.0",
     "jsonwebtoken": "^9.0.0",
+    "last-fm": "^5.3.0",
     "mongoose": "^6.8.3"
   },
   "devDependencies": {

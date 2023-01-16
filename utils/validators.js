@@ -22,12 +22,14 @@ const validatePlaylist = (playlist) => {
 
 const validateSong = (song) => {
     const schema = Joi.object({
+        song_id: Joi.string(),
         name: Joi.string().required(),
         artist: Joi.string().required(),
         song: Joi.string().required(),
         image: Joi.string(),
         duration: Joi.number().required()
-    })
-}
+    });
+    return schema.validate(song);
+};
 
 module.exports = {validateUser, validatePlaylist, validateSong};
