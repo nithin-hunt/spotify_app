@@ -29,7 +29,7 @@ router.post("/:id", [isAuthenticated, isUserExist],  async(req,res) => {
 });
 
 // Remove friend by id
-router.delete("/:id",[isAuthenticated], async(req,res) => {
+router.delete("/:id",[isAuthenticated, isUserExist], async(req,res) => {
     try {
         const user = await User.findById(req.user._id);
         const friend = await User.findById(req.params.id);
