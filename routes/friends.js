@@ -2,6 +2,7 @@ const router = require('express').Router();
 const isAuthenticated =require('../middlewares/isAuthenticated');
 const isUserExist = require('../middlewares/isUserExist');
 const User = require('../models/userModel');
+const Playlist = require('../models/playlistModel');
 
 // Add friend by id
 router.post("/:id", [isAuthenticated, isUserExist],  async(req,res) => {
@@ -57,6 +58,30 @@ router.get("/", [isAuthenticated], async(req,res) => {
     try {
         const user = await User.findById(req.user._id);
         res.status(200).json({friends: user.friends});
+    } catch(e) {
+        return res.status(500).json({Error: e.message});
+    }
+})
+
+// Get friend playlist by friend's id
+router.get("/:id/playlists", [isAuthenticated, isUserExist], async(req,res) => {
+    try {
+        const friend = await User.findById(req.params.id);
+        const user = await User.findById(req.user._id);
+
+        if(user._id.equals(friend._id)) {
+            return res.status(400).json("This is User(your) id");
+        }
+
+        const index = user.friends.indexOf(friend._id);
+        if(index < 0) {
+            return res.status(400).json("Friend not found in your list");
+        }
+
+        
+        friendPlaylists = await Playlist.find({ _id: friend.playlists})
+        res.status(200).json({playlists: friendPlaylists});
+        
     } catch(e) {
         return res.status(500).json({Error: e.message});
     }

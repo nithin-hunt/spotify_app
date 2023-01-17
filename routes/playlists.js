@@ -26,7 +26,7 @@ router.post("/", isAuthenticated, async (req,res) => {
 
         res.status(201).json(playlist);
     } catch (e) {
-        return res.status(500).json({Error: e});
+        return res.status(500).json({Error: e.message});
     }
 });
 
@@ -37,7 +37,7 @@ router.get('/', isAuthenticated, async(req,res) => {
         const playlists = await Playlist.find({_id: user.playlists});
         res.status(200).json(playlists);
     } catch(e) {
-        return res.status(500).json({Error: e});
+        return res.status(500).json({Error: e.message});
     }
 })
 
@@ -47,7 +47,7 @@ router.get('/:id', [isAuthenticated, isPlaylistExist, isUserOwnPlaylist], async(
         const playlist = await Playlist.findById(req.params.id);
         res.status(200).json(playlist);
     } catch (e) {
-        return res.status(500).json({Error: e});
+        return res.status(500).json({Error: e.message});
     }
 })
 
@@ -66,7 +66,7 @@ router.put('/:id', [isAuthenticated, isPlaylistExist, isUserOwnPlaylist], async(
 
         res.status(200).json({ message: "Playlist updated successfully" , updatedPlaylist : playlist})
     } catch(e) {
-        return res.status(500).json({Error: e});
+        return res.status(500).json({Error: e.message});
     }
 })
 
@@ -83,7 +83,7 @@ router.delete('/:id', [isAuthenticated, isPlaylistExist, isUserOwnPlaylist] ,asy
         
         return res.status(200).json("Playlist removed from library");
     } catch (e) {
-        return res.status(500).json({Error: e});
+        return res.status(500).json({Error: e.message});
     }
 })
 
@@ -103,7 +103,7 @@ router.post("/:id/songs", [isAuthenticated, isPlaylistExist, isUserOwnPlaylist, 
         res.status(200).send({message: "Added to playlist", playlist: playlist});
 
     } catch(e) {
-        return res.status(500).json({Error: e});
+        return res.status(500).json({Error: e.message});
     }
 });
 
@@ -121,7 +121,7 @@ router.delete("/:id/songs",[isAuthenticated, isPlaylistExist, isUserOwnPlaylist,
         res.status(200).send({message: "Removed from playlist", playlist: playlist});
 
     } catch(e) {
-        return res.status(500).json({Error: e});
+        return res.status(500).json({Error: e.message});
     }
     })
 module.exports = router;
