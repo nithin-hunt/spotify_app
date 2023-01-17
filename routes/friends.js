@@ -3,7 +3,7 @@ const isAuthenticated =require('../middlewares/isAuthenticated');
 const {validateEmail} = require('../utils/validators');
 const User = require('../models/userModel');
 
-// Add friend
+// Add friend by email
 router.post("/", [isAuthenticated],  async(req,res) => {
     try {
         const email = req.body.email;
@@ -37,7 +37,7 @@ router.post("/", [isAuthenticated],  async(req,res) => {
     }
 });
 
-// Remove friend
+// Remove friend by email
 router.delete("/",[isAuthenticated], async(req,res) => {
     try {
         const email = req.body.email;
@@ -65,6 +65,16 @@ router.delete("/",[isAuthenticated], async(req,res) => {
         await user.save();
 
         res.status(200).json({message: "Friend removed successfully", user: user});
+    } catch(e) {
+        return res.status(500).json({Error: e.message});
+    }
+})
+
+// Get friend list
+router.get("/", [isAuthenticated], async(req,res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        res.status(200).json(user.friends);
     } catch(e) {
         return res.status(500).json({Error: e.message});
     }
