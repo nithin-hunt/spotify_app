@@ -1,23 +1,14 @@
 const router = require('express').Router();
 const isAuthenticated =require('../middlewares/isAuthenticated');
-const {validateEmail} = require('../utils/validators');
+const isUserExist = require('../middlewares/isUserExist');
 const User = require('../models/userModel');
 
-// Add friend by email
-router.post("/", [isAuthenticated],  async(req,res) => {
+// Add friend by id
+router.post("/:id", [isAuthenticated, isUserExist],  async(req,res) => {
     try {
-        const email = req.body.email;
-        const {error} = validateEmail(email);
-        if(error){
-            return res.status(400).json({message: error.details[0].message});
-        }
-
         const user = await User.findById(req.user._id);
-        const friend = await User.findOne({email: req.body.email});
-        if (!friend) {
-            return res.status(404).send("Friend profile not found");
-        }
-
+        const friend = await User.findById(req.params.id);
+        
         if(user._id.equals(friend._id)) {
             return res.status(400).json("User can't add self as friend");
         }
@@ -37,20 +28,11 @@ router.post("/", [isAuthenticated],  async(req,res) => {
     }
 });
 
-// Remove friend by email
-router.delete("/",[isAuthenticated], async(req,res) => {
+// Remove friend by id
+router.delete("/:id",[isAuthenticated], async(req,res) => {
     try {
-        const email = req.body.email;
-        const {error} = validateEmail(email);
-        if(error){
-            return res.status(400).json({message: error.details[0].message});
-        }
-
         const user = await User.findById(req.user._id);
-        const friend = await User.findOne({email: req.body.email});
-        if (!friend) {
-            return res.status(404).send("Friend profile not found");
-        }
+        const friend = await User.findById(req.params.id);
 
         if(user._id.equals(friend._id)) {
             return res.status(400).json("User can't remove self as friend");
@@ -74,10 +56,11 @@ router.delete("/",[isAuthenticated], async(req,res) => {
 router.get("/", [isAuthenticated], async(req,res) => {
     try {
         const user = await User.findById(req.user._id);
-        res.status(200).json(user.friends);
+        res.status(200).json({friends: user.friends});
     } catch(e) {
         return res.status(500).json({Error: e.message});
     }
 })
+
 
 module.exports = router;
