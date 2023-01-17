@@ -1,18 +1,15 @@
 const router = require('express').Router();
 const User = require('../models/userModel');
+const {validateEmail, validatePassword} = require('../utils/validators');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const { v4: uuidv4,  validate: uuidValidate} = require('uuid');
-const Joi = require('joi');
-const passwordComplexity = require('joi-password-complexity');
+
 
 //Forgot password functionality
 router.post("/", async (req, res) => {
     try {
-        const schema = Joi.object({
-            email: Joi.string().email().required(),
-        });
-        const {error} = schema.validate({email :req.body.email});
+        const {error} = validateEmail(req.body.email);
         if (error) {
             return res.status(400).json({ message: error.details[0].message });
         }
@@ -76,10 +73,7 @@ router.put("/:uuid", async (req, res) => {
 
         const { password } = req.body;
         
-        const schema = Joi.object({
-            password: passwordComplexity().required(),
-        });
-        const { error } = schema.validate({password: req.body.password});
+        const { error } = validatePassword(req.body.password);
         if (error) {
             return res.status(400).json({ message: error.details[0].message });
         }

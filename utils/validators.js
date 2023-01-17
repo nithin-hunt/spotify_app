@@ -31,4 +31,18 @@ const validateSong = (song) => {
     return schema.validate(song);
 };
 
-module.exports = {validateUser, validatePlaylist, validateSong};
+const validateEmail = (userEmail) => {
+    const schema = Joi.object({
+        email: Joi.string().email().required(),
+    });
+    return schema.validate({email: userEmail});
+};
+
+const validatePassword = (userPassword) => {
+    const schema = Joi.object({
+        password: passwordComplexity().required(),
+    });
+    return schema.validate({password: userPassword});
+};
+
+module.exports = {validateUser, validatePlaylist, validateSong, validateEmail, validatePassword};
